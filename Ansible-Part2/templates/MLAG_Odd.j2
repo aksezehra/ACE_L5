@@ -1,0 +1,32 @@
+{% if "leaf1" in inventory_hostname or "leaf3" in inventory_hostname or "brdr1" in inventory_hostname %}
+vlan 4094
+  trunk group MLAGPEER
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 4094
+!
+interface Port-Channel10
+  description MLAG PEER LINK - LEAF
+  switchport mode trunk
+  switchport trunk group MLAGPEER
+!
+interface Ethernet 1
+  description MLAG PEER LINK-LEAF
+  switchport mode trunk
+  channel-group 10 mode active
+!
+interface Ethernet 6
+  description MLAG PEER LINK-LEAF
+  switchport mode trunk
+  channel-group 10 mode active
+!
+interface Vlan4094
+  description MLAG PEER LINK
+  ip address 192.168.255.1/30
+!
+mlag configuration
+  domain-id MLAG
+  local-interface Vlan4094
+  peer-address 192.168.255.2
+  peer-link Port-Channel10 
+{% endif %}

@@ -1,0 +1,18 @@
+---
+- hosts: s1-leaf1, s1-leaf3
+  gather_facts: no
+  tasks:
+  - name: Odd/Left MLAG config
+    template:
+      src: "{{lookup('env','PWD')}}/templates/MLAG_Odd.j2"
+      dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}_MLAG.cfg"
+# - hosts: s1-leaf2, s1-leaf4
+#   gather_facts: no
+#   tasks:
+#   - name: Even/Right MLAG config
+#     template:
+#       src: "{{lookup('env','PWD')}}/templates/MLAG_Even.j2"
+#       dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}_MLAG.cfg"
+  # - name: Upload config
+  #   eos_config:
+  #     src: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}_MLAG.cfg"
