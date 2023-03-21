@@ -1,0 +1,60 @@
+---
+  - hosts: hosts_DC2
+    gather_facts: no
+    tasks:
+    - name: Create port-channel
+      arista.eos.eos_lag_interfaces:
+        config:
+        - name: 1
+          members:
+          - member: "{{ item }}"
+            mode: active
+        state: merged
+      loop:
+        - Ethernet1
+        - Ethernet2
+        - Ethernet3
+        - Ethernet4
+  - hosts: s2-host1
+    gather_facts: no
+    tasks:
+    - name: Configure L3 port-channel
+      arista.eos.eos_l3_interfaces:
+        config:
+        - name: Port-channel1
+          ipv4:
+          - address: 10.10.10.11/24
+        state: merged
+    - name: Static default route
+      arista.eos.eos_static_routes:
+        config:
+        - address_families:
+          - afi: ipv4
+            routes:
+            - dest: 10.10.20.0/24
+              next_hops:
+              - forward_router_address: 10.10.10.1
+        state: merged
+  - hosts: s2-host2
+    gather_facts: no
+    tasks:
+    - name: Configure L3 port-channel
+      arista.eos.eos_l3_interfaces:
+        config:
+        - name: Port-channel1
+          ipv4:
+          - address: 10.10.20.12/24
+        state: merged
+    - name: Static default route
+      arista.eos.eos_static_routes:
+        config:
+        - address_families:
+          - afi: ipv4
+            routes:
+            - dest: 10.10.10.0/24
+              next_hops:
+              - forward_router_address: 10.10.20.1
+        state: merged
+  
+    
+
