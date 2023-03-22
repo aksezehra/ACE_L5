@@ -55,6 +55,16 @@
               next_hops:
               - forward_router_address: 10.10.20.1
         state: merged
+  - hosts: hosts_DC2
+    gather_facts: no
+    tasks:
+    - name: copy run start
+      arista.eos.command:
+        commands:
+          - 'copy run start'
+
+      
+
   
     
 
